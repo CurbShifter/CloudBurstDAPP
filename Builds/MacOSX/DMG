@@ -1,0 +1,77 @@
+#!/bin/bash
+printf '\e[3;0;0t'
+printf '\e[8;50;140t'
+
+BASEDIR=$(dirname $0)
+BASENAME=$(basename $0)
+
+echo $BASEDIR
+echo $BASENAME
+
+svn update $BASEDIR/../../..
+
+cd $BASEDIR
+
+#-----------------------------
+# revision update
+versionTemplateFile=$BASEDIR/../../Source/VersionTemplate.h
+versionFile=$BASEDIR/../../Source/Version.h
+
+versionTemplateFile2=$BASEDIR/../../Builds/MacOSX/revnr-Template.h
+versionFile2=$BASEDIR/../../Builds/MacOSX/revnr.h
+
+rev=$(svnversion $BASEDIR/../..)
+
+mix="Not mixed"
+mod="Not modified"
+# : mixed rev
+if [[ $rev == *":"* ]]; then
+echo "mixed rev"
+rev=${rev#*:}
+mix="Mixed revision"
+fi
+# M modified
+if [[ $rev == *"M"* ]]; then
+echo "modified"
+rev=${rev//M}
+mod="Modified"
+fi
+# S switched
+if [[ $rev == *"S"* ]]; then
+echo "switched"
+rev=${rev//S}
+fi
+# P sparse dir
+if [[ $rev == *"P"* ]]; then
+echo "sparse rev"
+rev=${rev//P}
+fi
+
+echo found rev number is $rev
+
+rm $versionFile
+touch $versionFile
+fullTxt=$(cat $versionTemplateFile)
+endTxt="${fullTxt/\$WCREV\$/$rev}"
+endTxt="${endTxt/\$WCREV\$/$rev}"
+endTxt="${endTxt/\$WCMODS?Modified:Not modified$/$mod}"
+endTxt="${endTxt/\$WCDATE\$/`date +%Y-%m-%d:%H:%M:%S`}"
+endTxt="${endTxt/\$WCMIXED?Mixed revision:Not mixed\$/$mix}"
+echo "$endTxt" > $versionFile
+
+rm $versionFile2
+touch $versionFile2
+fullTxt=$(cat $versionTemplateFile2)
+endTxt="${fullTxt/\$WCREV\$/$rev}"
+echo "$endTxt" > $versionFile2
+#-----------------------------
+/usr/bin/xcodebuild -target "DMG" -configuration Release clean build
+#----- DMG
+
+cd $BASEDIR/../../..
+
+svn commit -m "OSX"
+
+echo ———————————————————————-
+echo ELAPSED TIME: $(($SECONDS / 60)) min $(($SECONDS % 60)) sec
+echo ———————————————————————-
