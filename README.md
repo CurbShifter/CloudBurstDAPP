@@ -1,7 +1,7 @@
 # CloudBurst DAPP
 Decentralized cloud storage application to upload &amp; download files from the [Burstcoin blockchain](http://burst-coin.org/).
 
-![CloudBurst](https://raw.githubusercontent.com/CurbShifter/CloudBurst/master/img/cloudburst-logo-big.png?token=AnETEP84qUYfqymITDikzpW3CKLif3Reks5bXSTYwA%3D%3D)
+![CloudBurst](https://github.com/CurbShifter/CloudBurstDAPP/blob/master/img/cloudburst-logo-big.png)
 
 Decentralized file storage
 -
@@ -30,7 +30,7 @@ Downloading files is free. Just enter a CLOUD ID, for example `CLOUD-739F-XKNL-D
 
 The timestamp (local to user) of the last upload confirmation and the uploaded message will be displayed below the download button.
 
-![download screen](https://raw.githubusercontent.com/CurbShifter/CloudBurstDAPP/master/img/cloudburst-download-screen.png?token=AnETEGjR0VrrwljFDBPdifZhwPrb4WDUks5bWOT1wA%3D%3D)
+![download screen](https://github.com/CurbShifter/CloudBurstDAPP/blob/master/img/cloudburst-download-screen.png)
 
 ## Upload ##
 Select a file (1 MB max) and/or enter a message. Then select your upload parameters in the area below. To speed up the upload confirmation you can stack transactions and increase slot priority. But note that the costs will increase because the slots in the block will get more expensive. (When the Burstcoin network is very busy this becomes a necessity).
@@ -41,7 +41,7 @@ Enter the secret pass phrase for your account and click 'Upload'. The program sh
 
 NOTE: The 'remember' toggle switch will save your pass phrase on your computer. Consider it being saved as plain text ! Never use it with your main wallet.
 
-![upload screen](https://raw.githubusercontent.com/CurbShifter/CloudBurstDAPP/master/img/cloudburst-upload-screen.png?token=AnETEIWLFQAFvdN6iHg09UQKV2FBKfdGks5bWOIswA%3D%3D)
+![upload screen](https://github.com/CurbShifter/CloudBurstDAPP/blob/master/img/cloudburst-upload-screen.png)
 
 Cost
 -
