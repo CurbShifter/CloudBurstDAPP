@@ -39,9 +39,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "burst/BurstAPI.h"
 #include "LookAndFeel.h"
-#include "./burst/crypto/Crypto.hpp"
+#include "BurstLib.h"
+
+#define SEARCH_RANGE_MINUTES (24*60)
+#define PREFIX_CB_RS "CLOUD"
+#define PERCENT_FEE 1
 //[/Headers]
 
 
@@ -74,14 +77,6 @@ public:
 	class ProgressWindow : public ThreadWithProgressWindow
 	{
 	public:
-		struct MTX
-		{
-			String id;
-			StringArray addresses;
-			String amount;
-			String fee;
-			String dl;
-		};
 		struct params
 		{
 			String server;
@@ -95,73 +90,38 @@ public:
 			unsigned int fee;
 			unsigned int deadline;
 		};
-		// result
-		uint64 txFeePlanks;
-		uint64 feePlancks;
+		ProgressWindow(Interface *parent, String txt, int doThis, params paramatersIn);
+		~ProgressWindow();
 
+		// result download
+		bool downloadOk;
 		String dlFilename;
 		MemoryBlock dlData;
-
+		unsigned long long epoch;
+		
+		// result upload
+		unsigned long long confirmTime;
 		String uploadFinishMsg;
-
-		uint64 burnPlanks;
-		String err;
-		Array<StringArray> allAddresses;
-		int addressesNum;
+		uint64 txFeePlancks;
+		uint64 costsNQT;
+		uint64 feePlancks;
+		uint64 burnPlancks;
 		String allText;
-		Array<MTX> uploadedMTX;
-		Array<MTX> checkTheseMTX;
-		bool downloadOk;
-		Array<String> timecodes;
 
-		ProgressWindow(Interface *parent, String txt, int doThis, params paramatersIn)
-			: ThreadWithProgressWindow(txt, true, true, 15000, TRANS("Cancel"))
-		{
-			this->parent = parent;
-			this->doThis = doThis;
-
-			txFeePlanks = 0;
-			burnPlanks = 0;
-			addressesNum = 0;
-
-			paramaters = paramatersIn;
-
-			burstAPI.SetHost(paramaters.server);
-			burstAPI.SetSecretPhrase(paramaters.passPhrase);
-		};
+		String err;
 	private:
 		Interface *parent;
-		BurstAPI burstAPI;
+		
+		void *dll_handle;
+		burstlibPtr apiHandle;
+		BurstLib_FunctionHandles burstLib;
+
+		bool libLoaded;
 		int doThis;
 		params paramaters;
 		var sendMoneyResult;
 
-		void run()
-		{
-			ThreadWithProgressWindow::setProgress(0);
-			if (doThis == 0)
-			{
-				setStatusMessage("Searching and building data...");
-				Download();
-			}
-			else if (doThis == 1)
-			{
-				setStatusMessage("Sending data...");
-				Upload();
-
-			}
-			else if (doThis == 2)
-			{
-				setStatusMessage("Recalculating costs...");
-				RecalcCosts();
-			}
-			else if (doThis == 3)
-			{
-				setStatusMessage("Donating...");
-				Donate();
-			}
-		}
-
+		void run();
 		void Download();
 		void Upload();
 		int64 RecalcCosts();
@@ -213,7 +173,6 @@ private:
 	String costsLabelTooltip;
 
 	ProgressWindow::params paramaters;
-	Crypto crypto;
     //[/UserVariables]
 
     //==============================================================================

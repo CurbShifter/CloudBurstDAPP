@@ -22,9 +22,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		0A663998210412760020B266 /* Crytpo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A663993210412760020B266 /* Crytpo.cpp */; };
-		0A663999210412760020B266 /* curve25519_i64.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A663994210412760020B266 /* curve25519_i64.c */; };
-		0A66399A210412760020B266 /* sha256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A663996210412760020B266 /* sha256.cpp */; };
 		1012F134302B32335D1F1E38 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 798552F943E5C58CD502B28E /* QuickTime.framework */; };
 		16D527946ED4D9FFA28B5773 /* juce_audio_formats.mm in Sources */ = {isa = PBXBuildFile; fileRef = FD6F854E80C0DBBD8E335104 /* juce_audio_formats.mm */; };
 		18440F74C4CD9223E35573D6 /* BinaryData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0A920E4FA7D935D090BA89BD /* BinaryData.cpp */; };
@@ -32,7 +29,6 @@
 		43B1887996966594329F32FB /* juce_audio_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9CEFF0F52420825E5D6B4CC5 /* juce_audio_basics.mm */; };
 		44FA202681261483F7C76FE6 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC92D8E272325E72574F349C /* CoreAudio.framework */; };
 		52A2024FE89906D8D0BB2B90 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CCBEBA9B626D88CBCB360E8 /* Carbon.framework */; };
-		5670BD0BD828DA05842F90E4 /* BurstAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 240F91F3613869B413970AA0 /* BurstAPI.cpp */; };
 		5F861BCB37924F54A143A32D /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3DF51E0FEFDB2C70DB49C4E /* Main.cpp */; };
 		79D9B45260A75FF3C42FDC06 /* juce_opengl.mm in Sources */ = {isa = PBXBuildFile; fileRef = B2115D25743BFB88E19B2FC8 /* juce_opengl.mm */; };
 		7A5E9E8299B139784362AAE8 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10CDD5E87BDE64C2AF8E16C9 /* QTKit.framework */; };
@@ -125,12 +121,6 @@
 		0A170D6A9B005021B28D5236 /* juce_AudioProcessorParameterWithID.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_AudioProcessorParameterWithID.h; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_audio_processors/utilities/juce_AudioProcessorParameterWithID.h; sourceTree = "<absolute>"; };
 		0A2B3F89D6995EBE98735C43 /* juce_PluginListComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_PluginListComponent.h; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_audio_processors/scanning/juce_PluginListComponent.h; sourceTree = "<absolute>"; };
 		0A5C672B1421918E04943C0E /* bitmath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = bitmath.h; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_audio_formats/codecs/flac/libFLAC/include/private/bitmath.h; sourceTree = "<absolute>"; };
-		0A663992210412760020B266 /* Crypto.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Crypto.hpp; path = ../../Source/burst/crypto/Crypto.hpp; sourceTree = "<group>"; };
-		0A663993210412760020B266 /* Crytpo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Crytpo.cpp; path = ../../Source/burst/crypto/Crytpo.cpp; sourceTree = "<group>"; };
-		0A663994210412760020B266 /* curve25519_i64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = curve25519_i64.c; path = ../../Source/burst/crypto/curve25519_i64.c; sourceTree = "<group>"; };
-		0A663995210412760020B266 /* curve25519_i64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = curve25519_i64.h; path = ../../Source/burst/crypto/curve25519_i64.h; sourceTree = "<group>"; };
-		0A663996210412760020B266 /* sha256.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sha256.cpp; path = ../../Source/burst/crypto/sha256.cpp; sourceTree = "<group>"; };
-		0A663997210412760020B266 /* sha256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sha256.h; path = ../../Source/burst/crypto/sha256.h; sourceTree = "<group>"; };
 		0A664F6C387D75D2F5FAD24C /* jctrans.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = jctrans.c; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_graphics/image_formats/jpglib/jctrans.c; sourceTree = "<absolute>"; };
 		0A920E4FA7D935D090BA89BD /* BinaryData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BinaryData.cpp; path = ../../JuceLibraryCode/BinaryData.cpp; sourceTree = SOURCE_ROOT; };
 		0AB5609D7004C82BAF6BBE71 /* juce_URL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_URL.h; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_core/network/juce_URL.h; sourceTree = "<absolute>"; };
@@ -242,7 +232,6 @@
 		23E21547CCEFDAEF4B1E70B2 /* juce_android_Network.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_android_Network.cpp; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_core/native/juce_android_Network.cpp; sourceTree = "<absolute>"; };
 		240316382B60B6F2C21AE334 /* juce_audio_basics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_audio_basics.h; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_audio_basics/juce_audio_basics.h; sourceTree = "<absolute>"; };
 		2408858E22B4A59D0E57403D /* juce_ArrowButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_ArrowButton.h; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_gui_basics/buttons/juce_ArrowButton.h; sourceTree = "<absolute>"; };
-		240F91F3613869B413970AA0 /* BurstAPI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BurstAPI.cpp; path = ../../Source/burst/BurstAPI.cpp; sourceTree = SOURCE_ROOT; };
 		24157336D56C7596A370799B /* juce_MenuBarModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_MenuBarModel.h; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_gui_basics/menus/juce_MenuBarModel.h; sourceTree = "<absolute>"; };
 		24468BE263D584CD86E31C3F /* juce_PreferencesPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_PreferencesPanel.h; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_gui_extra/misc/juce_PreferencesPanel.h; sourceTree = "<absolute>"; };
 		248E012652FCC8585A879EEB /* juce_PlatformDefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_PlatformDefs.h; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_core/system/juce_PlatformDefs.h; sourceTree = "<absolute>"; };
@@ -933,7 +922,6 @@
 		BB4F2B5635CD795EACBEB5F6 /* codebook.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = codebook.h; path = "/Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_audio_formats/codecs/oggvorbis/libvorbis-1.3.2/lib/codebook.h"; sourceTree = "<absolute>"; };
 		BB6F718395B5290D1B25430B /* format.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = format.h; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_audio_formats/codecs/flac/libFLAC/include/private/format.h; sourceTree = "<absolute>"; };
 		BB965BC85385D299A153D8BB /* juce_DrawableRectangle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_DrawableRectangle.cpp; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_gui_basics/drawables/juce_DrawableRectangle.cpp; sourceTree = "<absolute>"; };
-		BC2471C8F5B2446262D68411 /* BurstAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BurstAPI.h; path = ../../Source/burst/BurstAPI.h; sourceTree = SOURCE_ROOT; };
 		BC2B8FF0DC1E04E6F146DFC0 /* juce_win32_HiddenMessageWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_win32_HiddenMessageWindow.h; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_events/native/juce_win32_HiddenMessageWindow.h; sourceTree = "<absolute>"; };
 		BC4132C768E6A1DEBDDBA872 /* mapping0.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = mapping0.c; path = "/Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_audio_formats/codecs/oggvorbis/libvorbis-1.3.2/lib/mapping0.c"; sourceTree = "<absolute>"; };
 		BC6270B843F233736DC6F74E /* juce_ProgressBar.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ProgressBar.cpp; path = /Users/Jorn/Documents/Libs/JUCE_4.3.1/modules/juce_gui_basics/widgets/juce_ProgressBar.cpp; sourceTree = "<absolute>"; };
@@ -1295,7 +1283,6 @@
 				6AB9D66C673A77D77D80B6E2 /* Logger.h */,
 				44E11BDF7714C74B75B4A246 /* cloudburst-icon-small.png */,
 				CE215110C4E746E69402AD53 /* NotoSans-Regular.ttf */,
-				4326CA3949A61FC275D05E29 /* burst */,
 				69C87A00A493821DD160B160 /* LookAndFeel.cpp */,
 				95BDE861F37BA06D65483126 /* LookAndFeel.h */,
 				4FFEF6390223645A11B4B3B4 /* Interface.cpp */,
@@ -1365,19 +1352,6 @@
 				AFF8082C1B37519BEE7462B2 /* juce_win32_Messaging.cpp */,
 			);
 			name = native;
-			sourceTree = "<group>";
-		};
-		0A6639912104124B0020B266 /* crypto */ = {
-			isa = PBXGroup;
-			children = (
-				0A663992210412760020B266 /* Crypto.hpp */,
-				0A663993210412760020B266 /* Crytpo.cpp */,
-				0A663994210412760020B266 /* curve25519_i64.c */,
-				0A663995210412760020B266 /* curve25519_i64.h */,
-				0A663996210412760020B266 /* sha256.cpp */,
-				0A663997210412760020B266 /* sha256.h */,
-			);
-			name = crypto;
 			sourceTree = "<group>";
 		};
 		0DCF0AE2828EF2FF1A8CB925 /* juce_audio_devices */ = {
@@ -1820,16 +1794,6 @@
 				E89B78BFE849BE12E20AA1C6 /* juce_Viewport.h */,
 			);
 			name = layout;
-			sourceTree = "<group>";
-		};
-		4326CA3949A61FC275D05E29 /* burst */ = {
-			isa = PBXGroup;
-			children = (
-				0A6639912104124B0020B266 /* crypto */,
-				240F91F3613869B413970AA0 /* BurstAPI.cpp */,
-				BC2471C8F5B2446262D68411 /* BurstAPI.h */,
-			);
-			name = burst;
 			sourceTree = "<group>";
 		};
 		4548B57AA8E069BBF3D5D54D /* Products */ = {
@@ -3465,6 +3429,7 @@
 				4F0DCCC8A7E7C05D32CAA776 /* Resources */,
 				1B2B0C40A140D2C73BAFC8A6 /* Sources */,
 				59058A74B0652AD79D5CBA85 /* Frameworks */,
+				0A4349022165B35400279A5F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -3528,6 +3493,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0A4349022165B35400279A5F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p $PROJECT_DIR/build/$CONFIGURATION/$CONTENTS_FOLDER_PATH/Resources\ncp $PROJECT_DIR/../../../BurstLib/Builds/MacOSX/build/Release/BurstLib.dylib $PROJECT_DIR/build/$CONFIGURATION/$CONTENTS_FOLDER_PATH/Resources";
+		};
 		0A98C86220F42AE700349DC9 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3539,7 +3517,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -ex\n\n[ \"$ACTION\" = build ] || exit 0\n[ \"$BUILD_VARIANTS\" = \"normal\" ] || exit 0\n\nPRONAME=CloudBurst\n\ndir=\"/Volumes/$PRONAME 1\"\ndmg=\"$OBJROOT/../$PRONAME.dmg\"\n\ndmgTemplate=\"$PROJECT_DIR/DMG-template/$PRONAME.sparseimage\"\ndmgTemplateTemp=\"$PROJECT_DIR/DMG-template/$PRONAME-temp.sparseimage\"\n\ndmgTemp=\"$CONFIGURATION_BUILD_DIR/../../$PROJECT_NAMETEMP.dmg\"\ndmgcontents=\"$CONFIGURATION_BUILD_DIR/../dmg-contents\"\n\nrm -f \"$dmgTemplateTemp\"\ncp -R \"$dmgTemplate\" \"$dmgTemplateTemp\"\n\ntheapp=\"$PROJECT_DIR/build/Release/$PRONAME.app\"\n#strip -x \"$theapp/Contents/MacOS/$PRONAME\"\n\nrm -f \"$dmg\"\n\nhdiutil mount \"$dmgTemplateTemp\"\n\ncp -R \"$theapp\" \"$dir\"\n\nln -s \"/Applications/\" \"$dir/Applications\"\n\nhdiutil detach \"$dir\"\n\nthedmgfile=\"/Users/Jorn/Desktop/$PRONAME.dmg\"\nrm -f $thedmgfile\nhdiutil convert \"$dmgTemplateTemp\" -format UDZO -o $thedmgfile\nhdiutil internet-enable -yes $thedmgfile\n\nrm -rf \"$dir\"\nrm -rf \"$dmgTemplateTemp\"\n";
+			shellScript = "set -ex\n\n[ \"$ACTION\" = build ] || exit 0\n[ \"$BUILD_VARIANTS\" = \"normal\" ] || exit 0\n\nPRONAME=CloudBurst\n\ndir=\"/Volumes/$PRONAME\"\ndmg=\"$OBJROOT/../$PRONAME.dmg\"\n\ndmgTemplate=\"$PROJECT_DIR/DMG-template/$PRONAME.sparseimage\"\ndmgTemplateTemp=\"$PROJECT_DIR/DMG-template/$PRONAME-temp.sparseimage\"\n\ndmgTemp=\"$CONFIGURATION_BUILD_DIR/../../$PROJECT_NAMETEMP.dmg\"\ndmgcontents=\"$CONFIGURATION_BUILD_DIR/../dmg-contents\"\n\nrm -f \"$dmgTemplateTemp\"\ncp -R \"$dmgTemplate\" \"$dmgTemplateTemp\"\n\ntheapp=\"$PROJECT_DIR/build/Release/$PRONAME.app\"\n#strip -x \"$theapp/Contents/MacOS/$PRONAME\"\n\nrm -f \"$dmg\"\n\nhdiutil mount \"$dmgTemplateTemp\"\n\ncp -R \"$theapp\" \"$dir\"\n\nln -s \"/Applications/\" \"$dir/Applications\"\n\nhdiutil detach \"$dir\"\n\nthedmgfile=\"/Users/Jorn/Desktop/$PRONAME.dmg\"\nrm -f $thedmgfile\nhdiutil convert \"$dmgTemplateTemp\" -format UDZO -o $thedmgfile\nhdiutil internet-enable -yes $thedmgfile\n\nrm -rf \"$dir\"\nrm -rf \"$dmgTemplateTemp\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3549,21 +3527,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				85D99CCF428FCF269F4BE2AC /* Logger.cpp in Sources */,
-				5670BD0BD828DA05842F90E4 /* BurstAPI.cpp in Sources */,
 				8EED7917FB0360E91DBB781B /* LookAndFeel.cpp in Sources */,
 				DD2170623BB280593129A26F /* Interface.cpp in Sources */,
 				5F861BCB37924F54A143A32D /* Main.cpp in Sources */,
 				18440F74C4CD9223E35573D6 /* BinaryData.cpp in Sources */,
-				0A66399A210412760020B266 /* sha256.cpp in Sources */,
 				43B1887996966594329F32FB /* juce_audio_basics.mm in Sources */,
 				B458ECC63885FC72FC89A0EA /* juce_audio_devices.mm in Sources */,
-				0A663998210412760020B266 /* Crytpo.cpp in Sources */,
 				16D527946ED4D9FFA28B5773 /* juce_audio_formats.mm in Sources */,
 				892DD0E9F5C66B52B5A5A10D /* juce_audio_processors.mm in Sources */,
 				B80FFFD4E864D9A3A633C956 /* juce_core.mm in Sources */,
 				83774C337A96F1BC55908E7A /* juce_cryptography.mm in Sources */,
 				BF120A6A206A4A79E8478D6E /* juce_data_structures.mm in Sources */,
-				0A663999210412760020B266 /* curve25519_i64.c in Sources */,
 				F5E3592C71C1B6D865D8C4C8 /* juce_events.mm in Sources */,
 				F039AB8252EC6A953A3EDE86 /* juce_graphics.mm in Sources */,
 				E6B79CD7961223794572B2F6 /* juce_gui_basics.mm in Sources */,
@@ -3664,6 +3638,7 @@
 					/Users/Jorn/Documents/Libs/JUCE_4.3.0/modules,
 					"$(inherited)",
 					/Users/Jorn/Documents/Libs/boost_1_67_0,
+					"\"$(SRCROOT)/../../../BurstLib/Source\"",
 				);
 				INFOPLIST_FILE = "Info-App.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -3696,6 +3671,7 @@
 					/Users/Jorn/Documents/Libs/JUCE_4.3.0/modules,
 					"$(inherited)",
 					/Users/Jorn/Documents/Libs/boost_1_67_0,
+					"\"$(SRCROOT)/../../../BurstLib/Source\"",
 				);
 				INFOPLIST_FILE = "Info-App.plist";
 				INSTALL_PATH = "$(HOME)/Applications";

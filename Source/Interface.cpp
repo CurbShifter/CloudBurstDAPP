@@ -38,12 +38,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Logger.h"
 #include "Version.h"
+#include "BurstLib.c"
 //[/Headers]
 
 #include "Interface.h"
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
+#define STR_SIZE 2048
 #define HERE_BE_DRAGONS "godmode"
 void Interface::log(String message)
 {
@@ -304,6 +306,7 @@ Interface::Interface ()
 
 
     //[UserPreSize]
+
 	costsLabel->setTooltip(" " + costsLabel->getTooltip() + TRANS("with a ") + String(PERCENT_FEE) + TRANS("% dapp usage fee"));
 	costsLabelTooltip = costsLabel->getTooltip();
 
@@ -398,7 +401,7 @@ Interface::Interface ()
 	burstAddressTextEditor->addListener(this);
 	passPhraseTextEditor->addListener(this);
 
-	versionLabel->setText("v1." SVNRevision, dontSendNotification);
+	versionLabel->setText("v1.2." SVNRevision, dontSendNotification);
 
 	feeSlider->setValue(10, dontSendNotification);
 	stackSizeSlider->setValue(10, dontSendNotification);
@@ -550,12 +553,12 @@ void Interface::resized()
 	passPhraseLabel2->setBounds(passPhraseLabel2->getBounds().translated(0, ty));
 	messageLabel4->setBounds(messageLabel4->getBounds().translated(0, ty));
 
-	Rectangle<int> rect(0, 80, 600, 300);
+	juce::Rectangle<int> rect(0, 80, 600, 300);
 	disclaimerLabel->setBounds(rect.reduced(80).withTrimmedBottom(25));
 	disclaimerButton->setBounds(disclaimerLabel->getBounds().translated(0, disclaimerLabel->getHeight()).withHeight(25));
 
 
-	Rectangle<int> rect2(rect.withTrimmedBottom(80).reduced(50));
+	juce::Rectangle<int> rect2(rect.withTrimmedBottom(80).reduced(50));
 	donateLabel->setBounds(rect2.withTrimmedBottom(rect2.getHeight() / 2));
 	hyperlinkButton->setBounds(rect2.withTrimmedTop(rect2.getHeight() / 2).withTrimmedBottom(rect2.getHeight() / 4));
 	okayButton->setBounds(rect2.withHeight(25).withY(rect2.getY() + rect2.getHeight()));
@@ -574,12 +577,12 @@ void Interface::buttonClicked (Button* buttonThatWasClicked)
 		SetParameterStruct();
 		ProgressWindow progressThread(this, "Download...", 0, paramaters);
 		progressThread.runThread();
-		if (progressThread.allText.isNotEmpty())
-			logTextEditor->setText(progressThread.allText, dontSendNotification);
-		else logTextEditor->setText("", dontSendNotification);
-
-		if (progressThread.allText.isNotEmpty() || progressThread.downloadOk)
+		logTextEditor->setText("", dontSendNotification);
+		if (progressThread.allText.isNotEmpty() && progressThread.downloadOk)
 		{
+			if (progressThread.allText.isNotEmpty())
+				logTextEditor->setText(progressThread.allText, dontSendNotification);			
+
 			//	NativeMessageBox::showMessageBox(AlertWindow::InfoIcon, ProjectInfo::projectName, progressThread.allText.dropLastCharacters(progressThread.allText.length() - 140));
 			if (progressThread.dlData.getSize() > 0 && progressThread.dlFilename.isNotEmpty())
 			{
@@ -597,7 +600,7 @@ void Interface::buttonClicked (Button* buttonThatWasClicked)
 				}
 			}
 		}
-		else if (progressThread.timecodes.size() > 0)
+		else if (progressThread.epoch > 0)
 			NativeMessageBox::showMessageBox(AlertWindow::WarningIcon, ProjectInfo::projectName, "The upload seems incomplete !\nIt is either broken or wait for confirmation.");
 		else NativeMessageBox::showMessageBox(AlertWindow::WarningIcon, ProjectInfo::projectName, "Nothing found !");
 
@@ -641,28 +644,6 @@ void Interface::buttonClicked (Button* buttonThatWasClicked)
 			progressThread.runThread();
 
 			NativeMessageBox::showMessageBox(AlertWindow::InfoIcon, ProjectInfo::projectName, progressThread.uploadFinishMsg);
-
-			// save the transactions to an xml file
-			Array<ProgressWindow::MTX> uploadedMTX = progressThread.uploadedMTX;
-			{
-				XmlElement mtxList("MTX");
-				for (int i = 0; i < uploadedMTX.size(); i++)
-				{
-					XmlElement* txXML = new XmlElement("tx");
-					txXML->setAttribute("id", uploadedMTX[i].id);
-					txXML->setAttribute("addresses", uploadedMTX[i].addresses.joinIntoString(";"));
-					txXML->setAttribute("amount", uploadedMTX[i].amount);
-					txXML->setAttribute("dl", uploadedMTX[i].dl);
-					txXML->setAttribute("fee", uploadedMTX[i].fee);
-
-					mtxList.addChildElement(txXML);
-				}
-
-				String myXmlDoc = mtxList.createDocument(String::empty);
-				File mtxfile(File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory).getChildFile("CloudBurst").getChildFile(String(Time::getCurrentTime().toMilliseconds() / 1000)).withFileExtension(".xml"));
-				mtxfile.create();
-				mtxfile.appendText(myXmlDoc);
-			}
 		}
         //[/UserButtonCode_sendButton]
     }
@@ -792,24 +773,24 @@ void Interface::RefreshCosts()
 	ProgressWindow progressThread(this, "Calculating costs...", 2, paramaters);
 	progressThread.runThread();
 
-	confirmationSecs = ((int)(progressThread.allAddresses.size() / stackSizeSlider->getValue()) + 1) * 4 * 60;
+	confirmationSecs = progressThread.confirmTime;// ((int)(progressThread.allAddresses.size() / stackSizeSlider->getValue()) + 1) * 4 * 60;
 
 	String feePlancksNeatNr(progressThread.feePlancks);
 	feePlancksNeatNr = feePlancksNeatNr.paddedLeft('0', 9);
 	feePlancksNeatNr = feePlancksNeatNr.substring(0, feePlancksNeatNr.length() - 8) + "." + feePlancksNeatNr.substring(feePlancksNeatNr.length() - 8, feePlancksNeatNr.length());
 
-	String txFeePlancksNeatNr(progressThread.txFeePlanks);
+	String txFeePlancksNeatNr(progressThread.txFeePlancks);
 	txFeePlancksNeatNr = txFeePlancksNeatNr.paddedLeft('0', 9);
 	txFeePlancksNeatNr = txFeePlancksNeatNr.substring(0, txFeePlancksNeatNr.length() - 8) + "." + txFeePlancksNeatNr.substring(txFeePlancksNeatNr.length() - 8, txFeePlancksNeatNr.length());
 
 	// alternative display
-	String txtAlt("\n\n" + String(progressThread.allAddresses.size()) + " Multi Out (" + String(progressThread.addressesNum * 8) + " bytes)\n" +
-		String((float)progressThread.burnPlanks) + " planck burn\n" +
+	String txtAlt("\n\n" + //String(progressThread.allAddresses.size()) + " Multi Out (" + String(progressThread.addressesNum * 8) + " bytes)\n" +
+		String((float)progressThread.burnPlancks) + " planck burn\n" +
 		txFeePlancksNeatNr + " BURST tx fee\n" +
 		feePlancksNeatNr + " BURST dapp fee");
 	costsLabel->setTooltip(costsLabelTooltip + txtAlt);
 
-	int64 totalNQT = progressThread.burnPlanks + progressThread.txFeePlanks + progressThread.feePlancks;
+	int64 totalNQT = progressThread.burnPlancks + progressThread.txFeePlancks + progressThread.feePlancks;
 	String neatNr(totalNQT);
 	neatNr = neatNr.paddedLeft('0', 9);
 	neatNr = neatNr.substring(0, neatNr.length() - 8) + "." + neatNr.substring(neatNr.length() - 8, neatNr.length());
@@ -915,260 +896,265 @@ void Interface::SetParameterStruct()
 	paramaters.downloadTransactionID = burstAddressTextEditor->getText();
 	paramaters.message = messageTextEditor->getText();
 	paramaters.fileToUpload = fileToUpload;
-	paramaters.dropSize = 1;// (unsigned int)dropSizeSlider->getValue();
+	paramaters.dropSize = 1;
 	paramaters.stackSize = (unsigned int)stackSizeSlider->getValue();
 	paramaters.fee = (unsigned int)feeSlider->getValue() * 735000;
-	paramaters.deadline = 24;// (unsigned int)deadlineSlider->getValue();
+	paramaters.deadline = 24;
 }
 
-bool CheckThreadShouldExit(const void* context, float progress)
+Interface::ProgressWindow::~ProgressWindow()
 {
-	if (context)
+	if (apiHandle && burstLib.DeleteHandle)
+		burstLib.DeleteHandle(apiHandle);
+	BurstLib_UnloadDLL(dll_handle);
+}
+
+Interface::ProgressWindow::ProgressWindow(Interface *parent, String txt, int doThis, params paramatersIn)
+	: ThreadWithProgressWindow(txt, true, true, 15000, TRANS("Cancel"))
+{
+	this->parent = parent;
+	this->doThis = doThis;
+
+	txFeePlancks = 0;
+	burnPlancks = 0;	
+	costsNQT = 0;
+	feePlancks = 0;
+
+	paramaters = paramatersIn;
+	
+	libLoaded = false;
+	File library_path(File::getSpecialLocation(File::hostApplicationPath).getParentDirectory());
+#if defined(_WIN64) || defined(_WIN32)
+	library_path = library_path.getChildFile("BurstLib.dll");
+#elif defined(__APPLE__)
+	library_path = library_path.getParentDirectory().getChildFile("Resources").getChildFile("BurstLib.dylib");
+#endif
+	dll_handle = 0;
+	if (library_path.existsAsFile())
 	{
-		((Interface::ProgressWindow*)context)->setProgress(jmin<float>(jmax<float>(progress, 0.f), 1.f));
-		return ((Interface::ProgressWindow*)context)->threadShouldExit();
+		dll_handle = BurstLib_LoadDLL(library_path.getFullPathName().toRawUTF8(), &burstLib);// Call the library functions
+		if (!dll_handle || burstLib.GetHandle == nullptr)
+			ToLog("BurstLib library not found!");
+		else
+		{
+			apiHandle = burstLib.GetHandle();
+			if (apiHandle)
+			{
+				ToLog(("BurstLib version ") + String(burstLib.GetBurstLibVersionNumber(apiHandle)));
+				libLoaded = true;
+			}
+			else ToLog("Failed to create API handle!");
+		}
 	}
-	return false;
+	if (!libLoaded)
+	{
+		NativeMessageBox::showMessageBox(AlertWindow::WarningIcon, ProjectInfo::projectName, "No BurstLib found, or it failed to load !\n" + library_path.getFullPathName());
+		juce::JUCEApplication::quit();
+	}
+	else
+	{
+		burstLib.SetNode(apiHandle, paramaters.server.toRawUTF8(), paramaters.server.getNumBytesAsUTF8());
+		burstLib.SetSecretPhrase(apiHandle, paramaters.passPhrase.toRawUTF8(), paramaters.passPhrase.getNumBytesAsUTF8());
+	}
+}
+
+void Interface::ProgressWindow::run()
+{
+	ThreadWithProgressWindow::setProgress(0);
+	if (burstLib.SetNode == 0)
+		return;
+
+	if (doThis == 0)
+	{
+		setStatusMessage("Searching and building data...");
+		Download();
+	}
+	else if (doThis == 1)
+	{
+		setStatusMessage("Sending data...");
+		Upload();
+	}
+	else if (doThis == 2)
+	{
+		setStatusMessage("Recalculating costs...");
+		RecalcCosts();
+	}
+	else if (doThis == 3)
+	{
+		setStatusMessage("Donating...");
+		Donate();
+	}
 }
 
 void Interface::ProgressWindow::Download()
 {
-	Array<MemoryBlock> memoryBLocks;
-	timecodes.clear();
-
-	burstAPI.ScrapeAccountTransactions(memoryBLocks, timecodes, paramaters.downloadTransactionID, &CheckThreadShouldExit, this);
-
 	allText.clear();
 	downloadOk = false;
-	for (int i = 0; i < memoryBLocks.size() && !threadShouldExit(); i++)
-	{
-		String text = memoryBLocks[i].toString();
-		String filename;
-		//File saveFile;
-		if (memoryBLocks[i].getSize() > (size_t)(text.length() + 1))
-		{
-			MemoryBlock memblock(memoryBLocks[i]);
-			memblock.removeSection(0, text.length() + 1);
-			filename = (memblock.toString());
-			if (filename.isNotEmpty() && memoryBLocks[i].getSize() - (filename.length() + 1) > 0)
-			{
-				dlFilename = filename;
-				dlData = memblock;
-				dlData.removeSection(0, filename.length() + 1);
 
-				downloadOk = true;
-			}
-		}
-		if (text.isNotEmpty())
+	if (burstLib.CloudDownloadStart == 0 || burstLib.CloudDownloadFinished == 0 || burstLib.CloudCancel == 0)
+		return;
+
+	dlData.ensureSize(8 * 128 * 1020, true);
+	int dlDataSize = dlData.getSize();
+
+	char filename[1024];
+	int filenameSize = 1024;
+	char msg[STR_SIZE];
+	int msgSize = STR_SIZE;
+	memset(&msg[0], 0, STR_SIZE);
+	epoch = 0;
+
+	if (burstLib.CloudDownloadStart(apiHandle,
+		paramaters.downloadTransactionID.toRawUTF8(), paramaters.downloadTransactionID.getNumBytesAsUTF8(),
+		0, 0))
+	{
+		float progress = 0.f;
+		while (burstLib.CloudDownloadFinished(apiHandle,
+			&msg[0], msgSize,
+			paramaters.downloadTransactionID.toRawUTF8(), paramaters.downloadTransactionID.getNumBytesAsUTF8(),
+			&filename[0], filenameSize,
+			dlData.getData(), dlDataSize,
+			epoch,
+			progress) == false && !threadShouldExit())
 		{
-			if (timecodes[i].isNotEmpty())
-			{ // 2014-08-11 04:00:00 genesis epoch
-				int64 tc = 1407722400 + timecodes[i].getLargeIntValue();
-				allText += Time(tc * 1000).toString(true, true) + "\n";
-			}
-			allText += text + "\n";
+			setStatusMessage(String((int)(progress * 100.f)) + "%");
+			setProgress(jmin<float>(jmax<float>(progress, 0.f), 1.f));
+			Time::waitForMillisecondCounter(Time::getApproximateMillisecondCounter() + 100);
 		}
+		if (threadShouldExit())
+			burstLib.CloudCancel(apiHandle, &msg[0], msgSize);
+		else
+		{
+			dlData.setSize(dlDataSize, true);
+			if (epoch > 0 && (dlDataSize > 0 || msgSize > 0)) // 2014-08-11 04:00:00 genesis
+				downloadOk = true;
+		}
+
+		dlFilename = String(filename, filenameSize);
+
+		allText = paramaters.downloadTransactionID + "\n";
+		allText += dlFilename + "\n";
+		allText += String(&msg[0], msgSize);
+
+		ToLog(allText);
 	}
-	ToLog(allText);
 }
 
 void Interface::ProgressWindow::Upload()
 {
-	burstAPI.SetSecretPhrase(paramaters.passPhrase);
-	BurstAPI::Balance bal = burstAPI.GetBalance(burstAPI.GetBalance());
-
-	// make memoryblock to save. message + file   MESSAGE\0FILENAME\0DATA
+	char jobId[STR_SIZE];
+	int jobIdSize = STR_SIZE;
+	memset(&jobId[0], 0, STR_SIZE);
 	String filename = paramaters.fileToUpload.getFileName();
 
-	MemoryBlock filenameData;
-	MemoryBlock fileData;
-	if (paramaters.fileToUpload.existsAsFile())
-	{
-		filenameData.append(filename.toUTF8(), filename.length());
-		paramaters.fileToUpload.loadFileAsData(fileData);
-	}
+	txFeePlancks = 0;
+	feePlancks = 0;
+	burnPlancks = 0;
+	costsNQT = 0;
+	confirmTime = 0;
 
-	MemoryBlock mbIn;
-	char zeroByte = 0;
-	mbIn.append(paramaters.message.toUTF8(), paramaters.message.length());
-	mbIn.append(&zeroByte, 1);
-	if (fileData.getSize() > 0 && paramaters.fileToUpload.existsAsFile())
+	if (burstLib.CloudUploadStart(apiHandle,
+		&jobId[0], jobIdSize,
+		paramaters.message.toUTF8(), paramaters.message.getNumBytesAsUTF8(),
+		filename.toRawUTF8(), filename.getNumBytesAsUTF8(),
+		paramaters.stackSize,
+		paramaters.fee))
 	{
-		mbIn.append(filenameData.getData(), filenameData.getSize());
-		mbIn.append(&zeroByte, 1);
-		mbIn.append(fileData.getData(), fileData.getSize());
-	}
-
-	// result is an array with multiple numerical addresses
-	int64 planks = RecalcCosts();
-	bool fullFail = false;
-	if (planks < bal.balanceNQT.getLargeIntValue())
-	{
-		var result;
-		ToLog("Sending");
-		// all transactions
-		int transactionNumber = 0;
-		while (transactionNumber < allAddresses.size() && !fullFail && !threadShouldExit())
+		char uploadResult[STR_SIZE];
+		int uploadResultSize = STR_SIZE;
+		memset(&uploadResult[0], 0, STR_SIZE);
+		
+		float progress = 0.f;
+		while (burstLib.CloudUploadFinished(apiHandle,
+			&uploadResult[0], uploadResultSize,
+			&jobId[0], jobIdSize,
+			txFeePlancks,
+			feePlancks,
+			burnPlancks,
+			costsNQT,
+			confirmTime,
+			progress) == false && !threadShouldExit())
 		{
-			if (allAddresses[transactionNumber].size() > 0)
-			{
-				ToLog(allAddresses[transactionNumber].joinIntoString(","));
-
-				// keep trying until 1 transaction doesnt fail
-				int failed = 1;
-				while (failed > 0 && failed < 32 && !threadShouldExit())
-				{
-					// Send the transaction
-					if (transactionNumber == 0)
-					{
-						StringArray amountsNQT;
-						for (int i = 0; i < allAddresses[transactionNumber].size()-1; i++)
-							amountsNQT.add("1");
-						amountsNQT.add(String(feePlancks));
-
-						result = burstAPI.SendMoneyMulti(
-							allAddresses[transactionNumber],
-							amountsNQT,
-							String(paramaters.fee + (735000 * (transactionNumber % paramaters.stackSize))),
-							String(paramaters.deadline * 60));
-					}
-					else
-					{
-						result = burstAPI.SendMoneyMultiSame(
-							allAddresses[transactionNumber],
-							String(paramaters.dropSize),
-							String(paramaters.fee + (735000 * (transactionNumber % paramaters.stackSize))),
-							String(paramaters.deadline * 60));
-					}
-
-					var transactionID = result["transaction"]; // the ID of the newly created transaction
-					if (transactionID.toString().isEmpty())
-					{
-						ToLog("FAILED " + String(failed) + " to send: " + (allAddresses[transactionNumber].joinIntoString(",")));
-						failed++;
-						Time::waitForMillisecondCounter(Time::getApproximateMillisecondCounter() + 1000);
-					}
-					else
-					{
-						ToLog("send tx " + String(transactionNumber) + " id:" + transactionID.toString());
-						// store a copy of the transaction
-						MTX mtx;
-						mtx.id = transactionID;
-						mtx.addresses = allAddresses[transactionNumber];
-						mtx.amount = String(paramaters.dropSize);
-						mtx.fee = String(paramaters.fee + (735000 * (transactionNumber % paramaters.stackSize)));
-						mtx.dl = String(paramaters.deadline * 60);
-						uploadedMTX.add(mtx);
-
-						failed = 0;
-						Time::waitForMillisecondCounter(Time::getApproximateMillisecondCounter() + 50);
-					}
-				}
-				if (failed >= 32)
-					fullFail = true;
-			}
-
-			transactionNumber++;
-			ThreadWithProgressWindow::setProgress((1.f / allAddresses.size()) * transactionNumber);
-			Time::waitForMillisecondCounter(Time::getApproximateMillisecondCounter() + 1000);
+			setProgress(jmin<float>(jmax<float>(progress, 0.f), 1.f));
+			Time::waitForMillisecondCounter(Time::getApproximateMillisecondCounter() + 100);
 		}
 
 		if (threadShouldExit())
 		{
-			uploadFinishMsg = ("Transaction cancelled !");
-		}
-		else if (fullFail)
-		{
-			uploadFinishMsg = ("Transaction failed !");
+			char msg[STR_SIZE];
+			int msgSize = STR_SIZE;
+			burstLib.CloudCancel(apiHandle, &msg[0], msgSize);
 		}
 		else
 		{
-			String txid = uploadedMTX.getLast().id;
-			String txidRS = PREFIX_CB_RS "-" + burstAPI.rsConvert(txid)["accountRS"].toString().fromFirstOccurrenceOf("BURST-", false, true);
+			uploadFinishMsg = String(&uploadResult[0], uploadResultSize);
+			if (uploadFinishMsg.startsWith("CLOUD"))
+			{
+				SystemClipboard::copyTextToClipboard(uploadFinishMsg);
+				uploadFinishMsg = ("All data has been send !\nPlease wait for the transaction(s) to be confirmed\n\n" + uploadFinishMsg + "\n\nThe download ID has been copied to the clipboard.");
+			}
+		}
+	}
+	else uploadFinishMsg = "failed to upload";
 
-			SystemClipboard::copyTextToClipboard(txidRS);
-			uploadFinishMsg = ("All data has been send !\nPlease wait for the transaction(s) to be confirmed\n\n" + txidRS + "\n\nThe download ID has been copied to the clipboard.");
-		}
-	}
-	else
-	{
-		if (bal.balanceNQT.getLargeIntValue() <= 0)
-		{
-			uploadFinishMsg = ("Your wallet balance for " + burstAPI.getReedSolomon() + " is zero !\nPlease check your connection and your passphrase for any errors.");
-		}
-		else
-		{
-			uploadFinishMsg = ("Your wallet balance is too low !");
-		}
-	}
 	ToLog(uploadFinishMsg);
-	/*	TEST UNPACK
-	var attachmentVAR;
-	for (int i = 0; i < sa.size(); i++)
-	{
-	var arryayTest;
-	for (int j = 0; j < sa[i].size(); j++)
-	arryayTest.append(sa[i][j]);
-	attachmentVAR.append(arryayTest);
-	}
-	Array<MemoryBlock> arb = burstAPI.ScrapeAccountTransactions("", attachmentVAR);
-	for (int i = 0; i < arb.size(); i++)
-	{ // check if the data matches
-	if (arb[i].matches(mbIn.getData(), mbIn.getSize()))
-	match = true;
-	}*/
-}
-
-void Interface::ProgressWindow::Donate()
-{
-	sendMoneyResult = burstAPI.SendMoney("BURST-72X9-E6F3-YSM2-CLQUD", "100000000", "735000", String(24 * 60));
 }
 
 int64 Interface::ProgressWindow::RecalcCosts()
 {
-	// make memoryblock to save. message + file   MESSAGE\0FILENAME\0DATA
-	String filename = paramaters.fileToUpload.getFileName();
-
-	MemoryBlock filenameData;
-	MemoryBlock fileData;
-	if (paramaters.fileToUpload.existsAsFile())
-	{
-		filenameData.append(filename.toUTF8(), filename.length());
-		paramaters.fileToUpload.loadFileAsData(fileData);
-	}
-
-	MemoryBlock mbIn;
-	char zeroByte = 0;
-	mbIn.append(paramaters.message.toUTF8(), paramaters.message.length());
-	mbIn.append(&zeroByte, 1);
-	if (fileData.getSize() > 0 && paramaters.fileToUpload.existsAsFile())
-	{
-		mbIn.append(filenameData.getData(), filenameData.getSize());
-		mbIn.append(&zeroByte, 1);
-		mbIn.append(fileData.getData(), fileData.getSize());
-	}
-
-	// result is an array with multiple numerical addresses
-	allAddresses.clear();
-	allAddresses = burstAPI.SetAttachmentData(mbIn);
-
-	addressesNum = 0;
-	txFeePlanks = 0;
+	char jobId[STR_SIZE];
+	int jobIdSize = STR_SIZE;
+	memset(&jobId[0], 0, STR_SIZE);
+	String filename = paramaters.fileToUpload.getFullPathName();
+	
+	txFeePlancks = 0;
 	feePlancks = 0;
-	burnPlanks = 0;
-	for (int i = 0; i < allAddresses.size(); i++)
+	burnPlancks = 0;
+	costsNQT = 0;
+	confirmTime = 0;
+
+	if (burstLib.CloudCalcCostsStart(apiHandle,
+		&jobId[0], jobIdSize,
+		paramaters.message.toUTF8(), paramaters.message.getNumBytesAsUTF8(),
+		filename.toRawUTF8(), filename.getNumBytesAsUTF8(),
+		paramaters.stackSize,
+		paramaters.fee))
 	{
-		//costsPlanks
-		burnPlanks += paramaters.dropSize * allAddresses[i].size();
-		addressesNum += allAddresses[i].size();
-		txFeePlanks += (paramaters.fee + (735000 * (i % paramaters.stackSize)));
+		char uploadResult[STR_SIZE];
+		int uploadResultSize = STR_SIZE;
+		memset(&uploadResult[0], 0, STR_SIZE);
+
+		float progress = 0.f;
+		while (burstLib.CloudCalcCostsFinished(apiHandle,
+			&uploadResult[0], uploadResultSize,
+			&jobId[0], jobIdSize,
+			txFeePlancks,
+			feePlancks,
+			burnPlancks,
+			costsNQT,
+			confirmTime,
+			progress) == false && !threadShouldExit())
+		{
+			setProgress(jmin<float>(jmax<float>(progress, 0.f), 1.f));
+			Time::waitForMillisecondCounter(Time::getApproximateMillisecondCounter() + 100);
+		}
+		if (threadShouldExit())
+		{
+			char msg[STR_SIZE];
+			int msgSize = STR_SIZE;
+			burstLib.CloudCancel(apiHandle, &msg[0], msgSize);
+		}
 	}
+	return costsNQT;
+}
 
-	burnPlanks -= 1; // we added one for the fee address
-	feePlancks = (txFeePlanks / 100); // 1
-
-	// The slot-based transaction fee system https://burstwiki.org/wiki/Slot-Based_Transaction_Fees
-	return txFeePlanks + burnPlanks + feePlancks;
+void Interface::ProgressWindow::Donate()
+{
+	char returnStr[STR_SIZE];
+	int returnSize = STR_SIZE;
+	const char *recipient = "BURST-72X9-E6F3-YSM2-CLQUD";
+	burstLib.sendMoney(apiHandle, &returnStr[0], returnSize, recipient, strlen(recipient), 100000000, 735000 * 2, 24 * 60, true);
+	sendMoneyResult = String(&returnStr[0], returnSize);
 }
 
 #define BIKELOCK "BIKELOCK95467231"
@@ -1283,7 +1269,7 @@ bool Interface::parseCommandsCore()
 					}
 				}
 			}
-			else if (progressThread.timecodes.size() > 0)
+			else if (progressThread.epoch > 0)
 				textOutput += ("The upload seems incomplete !\nIt is either broken or wait for confirmation.\n");
 			else textOutput += ("Nothing found !\n");
 		}
@@ -1370,25 +1356,6 @@ bool Interface::parseCommandsCore()
 					progressThread.runThread();
 
 					textOutput += progressThread.uploadFinishMsg + "\n";
-
-					// save the transactions to an xml file
-					Array<ProgressWindow::MTX> uploadedMTX = progressThread.uploadedMTX;
-					{
-						XmlElement mtxList("MTX");
-						for (int i = 0; i < uploadedMTX.size(); i++)
-						{
-							XmlElement* txXML = new XmlElement("tx");
-							txXML->setAttribute("id", uploadedMTX[i].id);
-							txXML->setAttribute("addresses", uploadedMTX[i].addresses.joinIntoString(";"));
-							txXML->setAttribute("amount", uploadedMTX[i].amount);
-							txXML->setAttribute("dl", uploadedMTX[i].dl);
-							txXML->setAttribute("fee", uploadedMTX[i].fee);
-
-							mtxList.addChildElement(txXML);
-						}
-						String myXmlDoc = mtxList.createDocument(String::empty);
-						textOutput += myXmlDoc + "\n\n";
-					}
 				}
 			}
 		}
@@ -1426,55 +1393,6 @@ bool Interface::parseCommandsCore()
 
 	return true;
 }
-
-/* for debugging
-void Interface::ProgressWindow::TestXML()
-{
-	//	FileChooser myChooser("Please select the file you want to test...", File::getSpecialLocation(File::userDesktopDirectory), "*.*");
-	//	if (myChooser.browseForFileToOpen())
-	{
-		//if (myChooser.getResult().getSize() >0)
-		{
-		StringArray txids;
-		Array<StringArray> payload;
-		XmlDocument myDocument(File("C:\\Users\\Jorn\\Documents\\CloudBurst\\1531354432.xml"));
-		std::unique_ptr<XmlElement> mainElement(myDocument.getDocumentElement());
-		if (mainElement == nullptr)
-		{
-		String error = myDocument.getLastParseError();
-		}
-		else
-		{
-		if (mainElement->hasTagName("MTX"))
-		{
-		forEachXmlChildElement(*mainElement, e)
-		{
-		if (e->hasTagName("tx"))
-		{
-		String id = e->getStringAttribute("id");
-		StringArray addresses = StringArray::fromTokens(e->getStringAttribute("addresses"), ";", "");
-		String amount = e->getStringAttribute("amount");
-		String dl = e->getStringAttribute("dl");
-		String fee = e->getStringAttribute("fee");
-
-		txids.add(id);
-		payload.add(addresses);
-		}
-		}
-		}
-		}
-
-		MemoryBlock arb = burstAPI.TestAccountTransactions(txids, payload);
-		//			for (int i = 0; i < arb.size(); i++)
-		{ // check if the data matches
-		//if (arb[i].matches(mbIn.getData(), mbIn.getSize()))
-		//	match = true;
-		}
-		}
-		}
-
-		return;
-}*/
 
 //[/MiscUserCode]
 
