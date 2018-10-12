@@ -2,12 +2,12 @@
 #ifndef __SubWCRev__
 #define __SubWCRev__
 
-#define SVNRevisionN 9
-#define SVNRevision "9"
+#define SVNRevisionN 10
+#define SVNRevision "10"
 #define SVNModified "Modified"
-#define SVNDate     "2018/07/26 22:26:41"
+#define SVNDate     "2018/10/06 16:25:50"
 #define SVNRange    "WCRANGE$"
-#define SVNMixed    "Not mixed"
+#define SVNMixed    "Mixed revision"
 #define SVNURL      "https://github.com/CurbShifter/CloudBurstDAPP.git/trunk"
 
 //#if 1

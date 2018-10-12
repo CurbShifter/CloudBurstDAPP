@@ -1045,7 +1045,7 @@ void Interface::ProgressWindow::Upload()
 	char jobId[STR_SIZE];
 	int jobIdSize = STR_SIZE;
 	memset(&jobId[0], 0, STR_SIZE);
-	String filename = paramaters.fileToUpload.getFileName();
+	String filename = paramaters.fileToUpload.getFullPathName();
 
 	txFeePlancks = 0;
 	feePlancks = 0;
