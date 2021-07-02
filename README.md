@@ -87,9 +87,6 @@ The msvc2013 / xcode projects are included. You will need to download and includ
 	sha256 by Brad Conte https://github.com/B-Con/crypto-algorithms
 	CURVE25519 Modified by mko, by Matthijs van Duin, based on work by Daniel J Bernstein
 
-Inquiries
--
-Implementations as background service can be discussed. You can reach me through the CloudBurst discord server [https://discord.gg/KsFf3jb](https://discord.gg/KsFf3jb "https://discord.gg/KsFf3jb")
 
 ----------
 
