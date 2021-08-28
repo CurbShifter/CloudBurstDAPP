@@ -1,3 +1,6 @@
+# Archived
+
+
 # CloudBurst DAPP
 Decentralized cloud storage application to upload &amp; download files from the [Burstcoin blockchain](http://burst-coin.org/).
 
